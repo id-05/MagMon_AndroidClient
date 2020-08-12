@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="10dp"
+        app:cardPreventCornerOverlap="true">
+
+        <RelativeLayout
+            android:id="@+id/cardLayot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#9C917336">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="93dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="156dp"
+                    android:layout_height="224dp"
+                    android:layout_weight="1"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/front" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/magmonName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp"
+                            android:text="test"
+                            android:textColor="#FBF9F9"
+                            android:textSize="18sp"
+                            app:autoSizeTextType="uniform" />
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/server_stat1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMaxTextSize="100sp"
+                                android:autoSizeMinTextSize="4sp"
+                                android:autoSizeStepGranularity="2sp"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:text="HePress"
+                                android:textSize="10sp"
+                                app:autoSizeTextType="uniform" />
+
+                            <TextView
+                                android:id="@+id/HePress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:autoSizeMaxTextSize="100sp"
+                                android:autoSizeMinTextSize="4sp"
+                                android:autoSizeStepGranularity="2sp"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:textSize="10sp"
+                                app:autoSizeTextType="uniform" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/server_stat2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMaxTextSize="100sp"
+                                android:autoSizeMinTextSize="4sp"
+                                android:autoSizeStepGranularity="2sp"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:text="HeLevel"
+                                android:textSize="10sp"
+                                app:autoSizeTextType="uniform" />
+
+                            <TextView
+                                android:id="@+id/HeLevel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:autoSizeMaxTextSize="100sp"
+                                android:autoSizeMinTextSize="4sp"
+                                android:autoSizeStepGranularity="2sp"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:textSize="10sp"
+                                app:autoSizeTextType="uniform" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/server_stat3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMaxTextSize="100sp"
+                                android:autoSizeMinTextSize="4sp"
+                                android:autoSizeStepGranularity="2sp"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:text="WaterTemp"
+                                android:textSize="10sp"
+                                app:autoSizeTextType="uniform" />
+
+                            <TextView
+                                android:id="@+id/WaterTemp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:autoSizeMaxTextSize="100sp"
+                                android:autoSizeMinTextSize="4sp"
+                                android:autoSizeStepGranularity="2sp"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:textSize="10sp"
+                                app:autoSizeTextType="uniform" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/server_stat4"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMaxTextSize="100sp"
+                                android:autoSizeMinTextSize="4sp"
+                                android:autoSizeStepGranularity="2sp"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:text="WaterFlow"
+                                android:textSize="10sp"
+                                app:autoSizeTextType="uniform" />
+
+                            <TextView
+                                android:id="@+id/WaterFlow"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:autoSizeMaxTextSize="100sp"
+                                android:autoSizeMinTextSize="4sp"
+                                android:autoSizeStepGranularity="2sp"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:textSize="10sp"
+                                app:autoSizeTextType="uniform" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/server_stat5"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMaxTextSize="100sp"
+                                android:autoSizeMinTextSize="4sp"
+                                android:autoSizeStepGranularity="2sp"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:text="LastUpdate"
+                                android:textSize="10sp"
+                                app:autoSizeTextType="uniform" />
+
+                            <TextView
+                                android:id="@+id/LastUpdate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:autoSizeMaxTextSize="100sp"
+                                android:autoSizeMinTextSize="4sp"
+                                android:autoSizeStepGranularity="2sp"
+                                android:gravity="right"
+                                android:maxLines="1"
+                                android:padding="8dp"
+                                android:textSize="10sp"
+                                app:autoSizeTextType="uniform" />
+                        </FrameLayout>
+
+
+                    </LinearLayout>
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
