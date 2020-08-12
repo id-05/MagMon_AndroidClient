@@ -18,26 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
-
-import android.content.Context;
-        import android.content.DialogInterface;
-        import android.content.Intent;
-        import android.view.ContextMenu;
-        import android.view.LayoutInflater;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.ImageView;
-        import android.widget.PopupMenu;
-        import android.widget.RelativeLayout;
-        import android.widget.TextView;
-        import android.widget.Toast;
-        import androidx.annotation.NonNull;
-        import androidx.cardview.widget.CardView;
-        import androidx.recyclerview.widget.RecyclerView;
-
-        import java.util.ArrayList;
+import java.util.ArrayList;
 
 public class MagMonCardAdapter extends RecyclerView.Adapter<MagMonCardAdapter.MagMonViewHolder> implements View.OnCreateContextMenuListener  {
 
@@ -69,6 +50,57 @@ public class MagMonCardAdapter extends RecyclerView.Adapter<MagMonCardAdapter.Ma
         magmonViewHolder.WaterTemp.setText(magmons.get(i).getWaterTemp1());
         magmonViewHolder.WaterFlow.setText(magmons.get(i).getWaterFlow1());
         magmonViewHolder.LastUpdate.setText(magmons.get(i).getLastTime());
+
+        magmonViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, MagMonPanel.class);
+                intent.putExtra("magmonid",magmons.get(i).getId());
+                try {
+                        context.startActivity(intent);
+                }catch (Exception e){
+                    MainActivity.print("errorrr = "+e);
+                }
+            }
+        });
+
+        magmonViewHolder.menuicon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(context, magmonViewHolder.menuicon);
+                popupMenu.inflate(R.menu.recycler_adapter_menu);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.itemSetting:
+                            {
+//                                Intent intent = new Intent(context,ServerSettings.class);
+//                                intent.putExtra("serverid",servers.get(i).getId());
+//                                if(servers.get(i).connect) {
+//                                    context.startActivity(intent);
+//                                }else{
+//                                    Toast toast = Toast.makeText(context, R.string.connectionerror, Toast.LENGTH_SHORT); toast.show();
+//                                }
+                            }
+                            break;
+                            case R.id.itemDelete:
+                            {
+                                MainActivity.magmonDelBase(magmons.get(i));
+                                magmons.remove(i);
+                                notifyDataSetChanged();
+                            }
+                            break;
+
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
     }
 
     @Override
@@ -97,11 +129,12 @@ public class MagMonCardAdapter extends RecyclerView.Adapter<MagMonCardAdapter.Ma
             layot = itemView.findViewById(R.id.cardLayot);
             cardView = itemView.findViewById(R.id.cardView);
             magmonName = itemView.findViewById(R.id.magmonName);
-            HePress = (TextView) itemView.findViewById(R.id.HePress);
+            HePress = itemView.findViewById(R.id.HePress);
             HeLevel = itemView.findViewById(R.id.HeLevel);
             WaterTemp = itemView.findViewById(R.id.WaterTemp);
             WaterFlow = itemView.findViewById(R.id.WaterFlow);
             LastUpdate = itemView.findViewById(R.id.LastUpdate);
+            menuicon = itemView.findViewById(R.id.editIcon);
         }
     }
 }

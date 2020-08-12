@@ -11,8 +11,8 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
+            android:id="@+id/mriImage"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:text="----"
                 android:textColor="#FFFFFF"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -114,7 +114,7 @@
                 <TextView
                     android:id="@+id/textView8"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="W.F:"
                     android:textColor="#FFFFFF"
                     android:textSize="8sp" />

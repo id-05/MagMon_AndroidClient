@@ -3,4 +3,6 @@
     <string name="titleAddServer">Add MagMon Server</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="deleteserver">Delete</string>
+    <string name="titleSettings">Settings</string>
 </resources>

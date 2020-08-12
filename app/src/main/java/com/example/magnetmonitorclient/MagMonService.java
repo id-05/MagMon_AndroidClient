@@ -48,15 +48,15 @@ public class MagMonService extends Service {
             mainTimer.schedule(mainTask, 0,2*60*1000);
         }
 
-        Notification notification;
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"1").
-                setSmallIcon(R.drawable.ikonka);
-        if (android.os.Build.VERSION.SDK_INT<=15) {
-            notification = builder.getNotification(); // API-15 and lower
-        }else{
-            notification = builder.build();
-        }
-        startForeground(777, notification);
+//        Notification notification;
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"1").
+//                setSmallIcon(R.drawable.ikonka);
+//        if (android.os.Build.VERSION.SDK_INT<=15) {
+//            notification = builder.getNotification(); // API-15 and lower
+//        }else{
+//            notification = builder.build();
+//        }
+//        startForeground(777, notification);
         //return super.onStartCommand(intent, flags, startId);
         //return START_STICKY;
         return START_REDELIVER_INTENT;

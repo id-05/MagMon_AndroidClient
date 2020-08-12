@@ -220,6 +220,14 @@
                 </FrameLayout>
 
             </LinearLayout>
+            <ImageView
+                android:id="@+id/editIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:padding="8dp"
+                app:srcCompat="@drawable/icon_edit"
+                tools:ignore="VectorDrawableCompat" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

@@ -61,7 +61,7 @@ public class JsonProcessing {
 
     public static void magmonAddBase(MagMonRec magmon){
         ContentValues newValues = new ContentValues();
-        print("add base "+magmon.Name);
+        //print("add base "+magmon.Name);
         newValues.put("name",magmon.Name);
         newValues.put("HePress",magmon.getHePress());
         newValues.put("HeLevel",magmon.getHeLevel());

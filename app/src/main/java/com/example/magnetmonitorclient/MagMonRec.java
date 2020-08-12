@@ -3,6 +3,15 @@ package com.example.magnetmonitorclient;
 import java.util.ArrayList;
 
 public class MagMonRec {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    int id;
     String Name;
     String ServerID;
     String HePress;

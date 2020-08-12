@@ -111,6 +111,12 @@ public class MainActivity extends AppCompatActivity {
         userDB.delete("servers","id = " + id, null);
     }
 
+    public static void magmonDelBase(MagMonRec magmon) {
+        int id = magmon.getId();
+        SQLiteDatabase userDB = dbHelper.getWritableDatabase();
+        userDB.delete("magmons","id = " + id, null);
+    }
+
     public static void serverUpdateBase(MagMonServer server) {
         int id = server.getId();
         ContentValues newValues = new ContentValues();
@@ -159,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
             if (cursor.moveToFirst()) {
                 do {
                     MagMonRec magmon = new MagMonRec();
+                    magmon.setId(cursor.getInt(cursor.getColumnIndex("id")));
                     magmon.setName(cursor.getString(cursor.getColumnIndex("name")));
                     magmon.setHePress(cursor.getString(cursor.getColumnIndex("HePress")));
                     magmon.setHeLevel(cursor.getString(cursor.getColumnIndex("HeLevel")));

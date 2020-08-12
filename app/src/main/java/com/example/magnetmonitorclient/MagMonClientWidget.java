@@ -1,5 +1,6 @@
 package com.example.magnetmonitorclient;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -9,13 +10,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import static com.example.magnetmonitorclient.MainActivity.print;
 
@@ -61,38 +59,55 @@ public class MagMonClientWidget extends AppWidgetProvider {
         // Настраиваем внешний вид виджета
         RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.mag_mon_client_widget);
         widgetView.setTextViewText(R.id.nameMagnet, widgetMagMon);
-        widgetView.setImageViewResource(R.id.imageView1,R.drawable.front);
+        widgetView.setImageViewResource(R.id.mriImage,R.drawable.front);
 
         dbHelper = new DateBase(context);
         SQLiteDatabase userDB = dbHelper.getWritableDatabase();
         try {
-            Cursor cursor = userDB.query("magmons",
-                    null,
-                    "name = ?",
-                    new String[] {widgetMagMon},
+            Cursor cursor = userDB.query("magmons", null, "name = ?", new String[] {widgetMagMon},
                     null, null, null);
             cursor.moveToFirst();
             widgetView.setTextViewText(R.id.w_hepress,cursor.getString(cursor.getColumnIndex("HePress")));
             widgetView.setTextViewText(R.id.w_helevel,cursor.getString(cursor.getColumnIndex("HeLevel"))+"%");
             widgetView.setTextViewText(R.id.w_wf,cursor.getString(cursor.getColumnIndex("WaterFlow1")));
             widgetView.setTextViewText(R.id.w_wt,cursor.getString(cursor.getColumnIndex("WaterTemp1")));
-//            SimpleDateFormat formatForDateNow = new SimpleDateFormat("HH:mm");
-//            Date currentDate = new Date();
-            //widgetView.setTextViewText(R.id.w_time,formatForDateNow.format(currentDate));
-            //print(formatForDateNow.format(currentDate));
             String buf =cursor.getString(cursor.getColumnIndex("Errors"));
             if(buf.equals("1")){
-                widgetView.setImageViewResource(R.id.imageView1,R.drawable.front_yellow);
+                widgetView.setImageViewResource(R.id.mriImage,R.drawable.front_yellow);
+
+                NotificationCompat.Builder builder =
+                        new NotificationCompat.Builder(context, "1")
+                                .setSmallIcon(R.drawable.ikonka)
+                                .setContentTitle("Atention")
+                                .setContentText("MagMon "+cursor.getString(cursor.getColumnIndex("name"))+" have problem")
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                //.setContentIntent(contentIntent)
+                                // необязательные настройки
+
+                                //.setTicker("Последнее китайское предупреждение!") // до Lollipop
+                                .setAutoCancel(true); // автоматически закрыть уведомление после нажатия
+                NotificationManagerCompat notificationManager =
+                        NotificationManagerCompat.from(context);
+                notificationManager.notify(777, builder.build());
             }
             if(cursor.getString(cursor.getColumnIndex("HePress")).equals("----")){
-                widgetView.setImageViewResource(R.id.imageView1,R.drawable.front_gray);
+                widgetView.setImageViewResource(R.id.mriImage,R.drawable.front_gray);
             }
-            //widgetView.setTextViewText(R.id.w_time,cursor.getString(cursor.getColumnIndex("Errors")));
             widgetView.setTextViewText(R.id.w_time,cursor.getString(cursor.getColumnIndex("LastTime")));
             cursor.close();
         }catch (SQLException e){
             print("update widget error: "+e.getMessage().toString());
         }
+
+        // Обновление виджета (вторая зона)
+        Intent configIntent = new Intent(context, MainActivity.class);
+
+        final ComponentName serviceName = new ComponentName(context, MagMonService.class);
+        Intent intent = new Intent();
+        intent.setComponent(serviceName);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
+
+        widgetView.setOnClickPendingIntent(R.id.mriImage, pendingIntent);
         // Обновляем виджет
         appWidgetManager.updateAppWidget(widgetID, widgetView);
         print("update ok");
