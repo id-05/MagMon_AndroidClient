@@ -1,5 +1,6 @@
 package com.example.magnetmonitorclient;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -10,6 +11,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
@@ -74,18 +77,24 @@ public class MagMonClientWidget extends AppWidgetProvider {
             String buf =cursor.getString(cursor.getColumnIndex("Errors"));
             if(buf.equals("1")){
                 widgetView.setImageViewResource(R.id.mriImage,R.drawable.front_yellow);
-
+                Uri alarmSound =
+                        RingtoneManager. getDefaultUri (RingtoneManager. TYPE_NOTIFICATION );
                 NotificationCompat.Builder builder =
                         new NotificationCompat.Builder(context, "1")
                                 .setSmallIcon(R.drawable.ikonka)
-                                .setContentTitle("Atention")
-                                .setContentText("MagMon "+cursor.getString(cursor.getColumnIndex("name"))+" have problem")
+                                .setContentTitle("Warning")
+                                .setContentText("MagMon "+cursor.getString(cursor.getColumnIndex("name"))+" have problem /n")
                                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                .setSound(alarmSound)
+                                .setLights(0xff00ff00,2000,500)
+                                //.set
                                 //.setContentIntent(contentIntent)
                                 // необязательные настройки
 
                                 //.setTicker("Последнее китайское предупреждение!") // до Lollipop
                                 .setAutoCancel(true); // автоматически закрыть уведомление после нажатия
+                //notification.flags = Notification.FLAG_SHOW_LIGHTS;
+                //builder.getNotification().flags= Notification.FLAG_SHOW_LIGHTS;
                 NotificationManagerCompat notificationManager =
                         NotificationManagerCompat.from(context);
                 notificationManager.notify(777, builder.build());

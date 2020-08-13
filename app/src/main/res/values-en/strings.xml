@@ -2,4 +2,5 @@
 <resources>
     <string name="deleteserver">Delete</string>
     <string name="titleSettings">Settings</string>
+    <string name="attention">Attention</string>
 </resources>
