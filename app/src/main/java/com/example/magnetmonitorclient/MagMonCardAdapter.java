@@ -44,12 +44,34 @@ public class MagMonCardAdapter extends RecyclerView.Adapter<MagMonCardAdapter.Ma
 
     @Override
     public void onBindViewHolder(@NonNull final MagMonViewHolder magmonViewHolder, final int i) {
+        final MagMonRec node = magmons.get(i);
         magmonViewHolder.magmonName.setText(magmons.get(i).getName());
         magmonViewHolder.HePress.setText(magmons.get(i).getHePress());
         magmonViewHolder.HeLevel.setText(magmons.get(i).getHeLevel());
         magmonViewHolder.WaterTemp.setText(magmons.get(i).getWaterTemp1());
         magmonViewHolder.WaterFlow.setText(magmons.get(i).getWaterFlow1());
         magmonViewHolder.LastUpdate.setText(magmons.get(i).getLastTime());
+
+        if (magmons.get(i).getMonitoringEnabled()) {
+            magmonViewHolder.notifiImage.setImageResource(R.drawable.notifications_active);
+        } else {
+            magmonViewHolder.notifiImage.setImageResource(R.drawable.notifications_off);
+        }
+
+        magmonViewHolder.notifiImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (magmons.get(i).getMonitoringEnabled()) {
+                    magmons.get(i).setMonitoringEnabled(false);
+                    MainActivity.magmonUpdateBase(node);
+                    magmonViewHolder.notifiImage.setImageResource(R.drawable.notifications_off);
+                } else {
+                    magmons.get(i).setMonitoringEnabled(true);
+                    MainActivity.magmonUpdateBase(node);
+                    magmonViewHolder.notifiImage.setImageResource(R.drawable.notifications_active);
+                }
+            }
+        });
 
         magmonViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +145,7 @@ public class MagMonCardAdapter extends RecyclerView.Adapter<MagMonCardAdapter.Ma
         TextView WaterTemp;
         TextView WaterFlow;
         TextView LastUpdate;
+        ImageView notifiImage;
 
         MagMonViewHolder(View itemView)  {
             super(itemView);
@@ -135,6 +158,7 @@ public class MagMonCardAdapter extends RecyclerView.Adapter<MagMonCardAdapter.Ma
             WaterFlow = itemView.findViewById(R.id.WaterFlow);
             LastUpdate = itemView.findViewById(R.id.LastUpdate);
             menuicon = itemView.findViewById(R.id.editIcon);
+            notifiImage = itemView.findViewById(R.id.notifiIcon);
         }
     }
 }

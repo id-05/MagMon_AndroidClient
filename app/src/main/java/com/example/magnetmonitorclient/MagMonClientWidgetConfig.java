@@ -2,7 +2,9 @@ package com.example.magnetmonitorclient;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Application;
 import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -65,7 +67,14 @@ public class MagMonClientWidgetConfig extends AppCompatActivity {
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putString("widget_" + widgetID, spinnerMagMon.getSelectedItem().toString());
                 editor.commit();
+
+                //final ComponentName serviceName = new ComponentName(, MagMonService.class);
+                //Intent intent = new Intent();
+                //intent.setComponent(serviceName);
+
                 setResult(RESULT_OK, resultValue);
+                //startService(new Intent(MagMonClientWidgetConfig.this,MagMonService.class));
+                MainActivity.print("add new widget");
                 finish();
             }
         });

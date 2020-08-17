@@ -1,6 +1,7 @@
 package com.example.magnetmonitorclient;
 
 public class MagMonServer {
+    int id;
     String Name;
     String IP;
     String Port;
@@ -12,8 +13,6 @@ public class MagMonServer {
     public void setId(int id) {
         this.id = id;
     }
-
-    int id;
 
     public String getName() {
         return Name;

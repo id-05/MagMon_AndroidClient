@@ -30,7 +30,6 @@ public class JsonProcessing {
         for (int i = 0; i <= jsonkeys.length - 1; i++) {
             JsonObject bufObject = SourceJson.getAsJsonObject(jsonkeys[i].toString());
             MagMonRec node = new MagMonRec();
-            //print("jsonkeys["+i+"].toString() = "+jsonkeys[i].toString()+"  /"+jsonkeys.length);
             node.setName(jsonkeys[i].toString());
             if (bufObject.has("HePress")) node.setHePress(bufObject.get("HePress").getAsString());
             if (bufObject.has("HeLevel")) node.setHeLevel(bufObject.get("HeLevel").getAsString());
@@ -50,6 +49,7 @@ public class JsonProcessing {
                 if(magmonUpdateBase(node)==0){
                     magmonAddBase(node);
                 }
+                MainActivity.adapter.notifyDataSetChanged();
             Thread.sleep(1000);
         }
     }
@@ -61,7 +61,6 @@ public class JsonProcessing {
 
     public static void magmonAddBase(MagMonRec magmon){
         ContentValues newValues = new ContentValues();
-        //print("add base "+magmon.Name);
         newValues.put("name",magmon.Name);
         newValues.put("HePress",magmon.getHePress());
         newValues.put("HeLevel",magmon.getHeLevel());
@@ -71,6 +70,7 @@ public class JsonProcessing {
         newValues.put("WaterTemp2",magmon.getWaterTemp2());
         newValues.put("Errors",magmon.Errors.size());
         newValues.put("LastTime",magmon.getLastTime());
+        newValues.put("MonitoringEnabled",1);
         try {
             SQLiteDatabase userDB = dbHelper.getWritableDatabase();
             userDB.insertOrThrow("magmons", null, newValues);

@@ -1,42 +1,20 @@
 package com.example.magnetmonitorclient;
 
-import android.app.Activity;
-import android.app.Application;
-import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.net.ssl.HttpsURLConnection;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -86,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("method","new");
                 startActivity(i);
                 return true;
+            case R.id.StopService:
+                stopService(new Intent(MainActivity.this,MagMonService.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -109,6 +90,27 @@ public class MainActivity extends AppCompatActivity {
         int id = server.getId();
         SQLiteDatabase userDB = dbHelper.getWritableDatabase();
         userDB.delete("servers","id = " + id, null);
+    }
+
+    public static int magmonUpdateBase(MagMonRec magmon) {
+        ContentValues newValues = new ContentValues();
+        newValues.put("HePress",magmon.getHePress());
+        newValues.put("HeLevel",magmon.getHeLevel());
+        newValues.put("WaterFlow1",magmon.getWaterFlow1());
+        newValues.put("WaterTemp1",magmon.getWaterTemp1());
+        newValues.put("WaterFlow2",magmon.getWaterFlow2());
+        newValues.put("WaterTemp2",magmon.getWaterTemp2());
+        newValues.put("Errors",1);
+        newValues.put("LastTime",magmon.getLastTime());
+        if(magmon.getMonitoringEnabled()){
+            newValues.put("MonitoringEnabled",1);
+        }else{
+            newValues.put("MonitoringEnabled",0);
+        }
+        SQLiteDatabase userDB = dbHelper.getWritableDatabase();
+        int buf = userDB.update("magmons", newValues, "name = ?",
+                new String[] {magmon.Name});
+        return buf;
     }
 
     public static void magmonDelBase(MagMonRec magmon) {
@@ -172,6 +174,11 @@ public class MainActivity extends AppCompatActivity {
                     magmon.setWaterFlow1(cursor.getString(cursor.getColumnIndex("WaterFlow1")));
                     magmon.setWaterTemp1(cursor.getString(cursor.getColumnIndex("WaterTemp1")));
                     magmon.setLastTime(cursor.getString(cursor.getColumnIndex("LastTime")));
+                    if(cursor.getInt(cursor.getColumnIndex("MonitoringEnabled"))==1){
+                        magmon.setMonitoringEnabled(true);
+                    }else{
+                        magmon.setMonitoringEnabled(false);
+                    }
                     MagMonList.add(magmon);
                 }
                 while (cursor.moveToNext());

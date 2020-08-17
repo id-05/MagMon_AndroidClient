@@ -24,6 +24,16 @@ public class MagMonRec {
     ArrayList<String> Errors;
     String LastTime;
 
+    public Boolean getMonitoringEnabled() {
+        return MonitoringEnabled;
+    }
+
+    public void setMonitoringEnabled(Boolean monitoringEnabled) {
+        MonitoringEnabled = monitoringEnabled;
+    }
+
+    Boolean MonitoringEnabled;
+
     public String getServerID() {
         return ServerID;
     }

@@ -34,6 +34,7 @@ public class DateBase extends SQLiteOpenHelper {
                         + "WaterTemp2 text,"
                         + "Errors text,"
                         + "LastTime text,"
+                        + "MonitoringEnabled integer,"
                         + "ServerID text" + ");";
         magmonDB.execSQL(SQL);
     }

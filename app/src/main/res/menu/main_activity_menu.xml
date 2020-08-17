@@ -4,4 +4,7 @@
     <item
         android:id="@+id/TitleAddServer"
         android:title="@string/titleAddServer" />
+    <item
+        android:id="@+id/StopService"
+        android:title="Stop Service" />
 </menu>
