@@ -67,18 +67,12 @@ public class MagMonClientWidgetConfig extends AppCompatActivity {
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putString("widget_" + widgetID, spinnerMagMon.getSelectedItem().toString());
                 editor.commit();
-
-                //final ComponentName serviceName = new ComponentName(, MagMonService.class);
-                //Intent intent = new Intent();
-                //intent.setComponent(serviceName);
-
                 setResult(RESULT_OK, resultValue);
-                //startService(new Intent(MagMonClientWidgetConfig.this,MagMonService.class));
+                startService(new Intent(MagMonClientWidgetConfig.this,MagMonService.class));
                 MainActivity.print("add new widget");
                 finish();
             }
         });
-
     }
 
     public ArrayList<String> GetMagMonList(){

@@ -16,6 +16,8 @@ import android.widget.RemoteViews;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import java.util.ArrayList;
+
 public class MagMonClientWidget extends AppWidgetProvider {
 
     public static String FORCE_WIDGET_UPDATE = "com.example.magnetmonitorclient.FORCE_WIDGET_UPDATE";
@@ -28,6 +30,8 @@ public class MagMonClientWidget extends AppWidgetProvider {
         //appWidgetManager = AppWidgetManager.getInstance(context);
         //ComponentName thisWidget = new ComponentName(context, MagMonClientWidget.class);
         MainActivity.print("upDate");
+        RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.mag_mon_client_widget);
+        widgetView.setImageViewResource(R.id.mriImage,R.drawable.front_gray);
         for (int appWidgetId : appWidgetIds) {
                 updateWidget(context, appWidgetManager, sharedPreferences, appWidgetId);
         }
@@ -56,52 +60,60 @@ public class MagMonClientWidget extends AppWidgetProvider {
         String widgetMagMon = sharedPreferences.getString("widget_" + widgetID, null);
         if (widgetMagMon == null) return;
         // Настраиваем внешний вид виджета
-        RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.mag_mon_client_widget);
-        widgetView.setTextViewText(R.id.nameMagnet, widgetMagMon);
-        dbHelper = new DateBase(context);
-        SQLiteDatabase userDB = dbHelper.getWritableDatabase();
-        try {
-            Cursor cursor = userDB.query("magmons", null, "name = ?", new String[] {widgetMagMon},
-                    null, null, null);
-            cursor.moveToFirst();
-            widgetView.setTextViewText(R.id.w_hepress,cursor.getString(cursor.getColumnIndex("HePress")));
-            widgetView.setTextViewText(R.id.w_helevel,cursor.getString(cursor.getColumnIndex("HeLevel"))+"%");
-            widgetView.setTextViewText(R.id.w_wf,cursor.getString(cursor.getColumnIndex("WaterFlow1")));
-            widgetView.setTextViewText(R.id.w_wt,cursor.getString(cursor.getColumnIndex("WaterTemp1")));
-            String buf =cursor.getString(cursor.getColumnIndex("Errors"));
 
-            if(buf.equals("1")) {
+        MagMonRec magmon = new MagMonRec();
+        magmon = MainActivity.getMagMonByName(context,widgetMagMon);
+        MagMonServer server = new MagMonServer();
+        server = MainActivity.getServerById(context,magmon.getServerID());
+        RemoteViews widgetView;
+        if(!server.getConnect()){
+            //client not connect to server
+            MainActivity.print("no connect");
+            widgetView = new RemoteViews(context.getPackageName(), R.layout.mag_mon_client_widget_noconnect);
+            widgetView.setTextViewText(R.id.nameMagnet, widgetMagMon);
+            widgetView.setTextViewText(R.id.statusString,"Client is not");
+            widgetView.setImageViewResource(R.id.mriImage, R.drawable.front_noconnect);
+        }else {
+            if (magmon.getHePress().equals("----")) {
+                //magmon is not connect to seerver
+                widgetView = new RemoteViews(context.getPackageName(), R.layout.mag_mon_client_widget_noconnect);
+                widgetView.setImageViewResource(R.id.mriImage, R.drawable.front_gray);
+                widgetView.setTextViewText(R.id.nameMagnet, widgetMagMon);
+                widgetView.setTextViewText(R.id.statusString, "MagMon is not");
+            }else{
+
+            widgetView = new RemoteViews(context.getPackageName(), R.layout.mag_mon_client_widget);
+            widgetView.setTextViewText(R.id.nameMagnet, widgetMagMon);
+            widgetView.setTextViewText(R.id.w_hepress, magmon.getHePress());
+            widgetView.setTextViewText(R.id.w_helevel, magmon.getHeLevel() + "%");
+            widgetView.setTextViewText(R.id.w_wf, magmon.getWaterFlow1());
+            widgetView.setTextViewText(R.id.w_wt, magmon.getWaterTemp1());
+            if (magmon.getErrors().size() == 1) {
                 widgetView.setImageViewResource(R.id.mriImage, R.drawable.front_yellow);
+            } else {
+                widgetView.setImageViewResource(R.id.mriImage, R.drawable.front);
             }
-            if(cursor.getInt(cursor.getColumnIndex("MonitoringEnabled"))==1){
-                Uri alarmSound = RingtoneManager. getDefaultUri (RingtoneManager. TYPE_NOTIFICATION );
+
+            if (magmon.getMonitoringEnabled()) {
+                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 NotificationCompat.Builder builder =
                         new NotificationCompat.Builder(context, "1")
                                 .setSmallIcon(R.drawable.ikonka)
-                                .setContentTitle("Warning")
-                                .setContentText("MagMon "+cursor.getString(cursor.getColumnIndex("name"))+" have problem")
+                                .setContentTitle(magmon.getName())
+                                .setContentText("Error: " + magmon.getErrors().get(0) + "\n")
                                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                                 .setSound(alarmSound)
-                                .setLights(0xff00ff00,2000,500)
+                                .setLights(0xff00ff00, 2000, 500)
+                                .setColorized(true)
                                 .setAutoCancel(true); // автоматически закрыть уведомление после нажатия
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                 notificationManager.notify(777, builder.build());
             }
 
-            if(cursor.getString(cursor.getColumnIndex("HePress")).equals("----")){
-                widgetView.setImageViewResource(R.id.mriImage,R.drawable.front_gray);
-            }
-            //String buf2 = cursor.getString(cursor.getColumnIndex("LastTime"));
-            //int bufint = buf2.indexOf(" ");
-            //String buf3 = buf2.substring(bufint,buf2.length());
-            widgetView.setTextViewText(R.id.w_time,cursor.getString(cursor.getColumnIndex("LastTime")));
-            //widgetView.setTextViewText(R.id.w_time,buf3);
-            cursor.close();
-        }catch (SQLException e){
-            MainActivity.print("update widget error: "+e.getMessage().toString());
+            widgetView.setTextViewText(R.id.w_time, magmon.getLastTime());
+        }
         }
         // Обновление виджета (вторая зона)
-        //Intent configIntent = new Intent(context, MainActivity.class);
         final ComponentName serviceName = new ComponentName(context, MagMonService.class);
         Intent intent = new Intent();
         intent.setComponent(serviceName);
@@ -112,12 +124,9 @@ public class MagMonClientWidget extends AppWidgetProvider {
         MainActivity.print("update ok");
     }
 
-
-
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
-
     }
 
     @Override

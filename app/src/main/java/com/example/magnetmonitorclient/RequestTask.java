@@ -3,23 +3,15 @@ package com.example.magnetmonitorclient;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
-
 import androidx.annotation.RequiresApi;
-
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.TimerTask;
-
 import javax.net.ssl.HttpsURLConnection;
-
 import static com.example.magnetmonitorclient.MainActivity.print;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RequestTask extends TimerTask {
 
@@ -34,13 +26,7 @@ public class RequestTask extends TimerTask {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void run() {
-
         for (final MagMonServer server:ServerList){
-            try{
-                //String auth =new String( "" + "");
-                //byte[] data1 = auth.getBytes(UTF_8);
-                //String base64 = android.util.Base64.encodeToString(data1, android.util.Base64.NO_WRAP);
-
                 try {
                     URL url = new URL("http://"+server.getIP()+":"+server.getPort()+"/json");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -50,30 +36,30 @@ public class RequestTask extends TimerTask {
                     connection.setRequestMethod("GET");
                     connection.setConnectTimeout(1000);
                     connection.connect();
-                    //JSONObject obj = new JSONObject();
                     int responseCode=connection.getResponseCode();
                     if (responseCode == HttpsURLConnection.HTTP_OK) {
+                        server.setConnect(true);
+                        MainActivity.serverUpdateBase(server);
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "windows-1251"));
                         String line = null;
-                        StringBuilder sb = new StringBuilder();
+                        StringBuilder stringBuilder = new StringBuilder();
                         while ((line = bufferedReader.readLine()) != null) {
-                            sb.append(line);
+                            stringBuilder.append(line);
                         }
                         bufferedReader.close();
-                        String result = sb.toString();
+                        String result = stringBuilder.toString();
                         String new_str = result.replace ("null", "----");
-                        //print( "answer =  "+result);
-                        JsonProcessing.Processing(context,new_str);
+                        JsonProcessing.Processing(context,new_str,server.getId());
                         refreshWidget(context);
                     }else {
-                        print("error 2  "+ String.valueOf(responseCode));
+                        print("error response code  "+ String.valueOf(responseCode));
                     }
                 }catch (Exception e) {
-                    print("error 3= "+e.toString());
+                    print("error connect "+e.toString());
+                    server.setConnect(false);
+                    MainActivity.serverUpdateBase(server);
+                    refreshWidget(context);
                 }
-            }catch (Exception e){
-                print("error 1 "+e.toString());
-            }
         }
     }
 

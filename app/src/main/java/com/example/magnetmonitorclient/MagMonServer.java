@@ -2,9 +2,18 @@ package com.example.magnetmonitorclient;
 
 public class MagMonServer {
     int id;
+    Boolean Connect;
     String Name;
     String IP;
     String Port;
+
+    public Boolean getConnect() {
+        return Connect;
+    }
+
+    public void setConnect(Boolean connect) {
+        Connect = connect;
+    }
 
     public int getId() {
         return id;

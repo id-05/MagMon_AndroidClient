@@ -19,6 +19,7 @@ public class DateBase extends SQLiteOpenHelper {
                         + "id integer primary key autoincrement,"
                         + "name text,"
                         + "ip text,"
+                        +"connect integer,"
                         + "port text" + ");";
         magmonDB.execSQL(SQL);
 
@@ -35,7 +36,32 @@ public class DateBase extends SQLiteOpenHelper {
                         + "Errors text,"
                         + "LastTime text,"
                         + "MonitoringEnabled integer,"
-                        + "ServerID text" + ");";
+                        + "HeLevelCurrent text,"
+                        + "HeLevelTopCurrent text,"
+                        + "HeLevelTop text,"
+                        + "ReconRuOCurrent text,"
+                        + "ReconRuO text,"
+                        + "SpareScanRoom1A text,"
+                        + "ShieldTemp text,"
+                        + "ReconSi410Current text,"
+                        + "ReconSi410 text,"
+                        + "SpareScanRoom1B text,"
+                        + "ColdheadRuOCurrent text,"
+                        + "ColdheadTemp text,"
+                        + "SCPressure text,"
+                        + "SpareCmp1b text,"
+                        + "SpareCmp1c text,"
+                        + "ReconSi4102a text,"
+                        + "ReconSi4102aCurrent text,"
+                        + "ReconSi4102b text,"
+                        + "ReconSi4102bCurrent text,"
+                        + "VoltsPlusExternal text,"
+                        + "VoltsPlus text,"
+                        + "VoltsMinus text,"
+                        + "VoltsMinusExternal text,"
+                        + "HFOBottomShield text,"
+                        + "MagmonCaseTemp text,"
+        + "ServerID integer" + ");";
         magmonDB.execSQL(SQL);
     }
 

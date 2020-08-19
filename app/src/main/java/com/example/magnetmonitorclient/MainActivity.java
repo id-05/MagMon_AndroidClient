@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
         newValues.put("WaterTemp1",magmon.getWaterTemp1());
         newValues.put("WaterFlow2",magmon.getWaterFlow2());
         newValues.put("WaterTemp2",magmon.getWaterTemp2());
+        ///////////////////в этом месте была ошибка
+        //print(Integer.toString(magmon.getErrors().size()));
         newValues.put("Errors",1);
         newValues.put("LastTime",magmon.getLastTime());
         if(magmon.getMonitoringEnabled()){
@@ -110,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase userDB = dbHelper.getWritableDatabase();
         int buf = userDB.update("magmons", newValues, "name = ?",
                 new String[] {magmon.Name});
+        userDB.close();
         return buf;
     }
 
@@ -123,9 +128,15 @@ public class MainActivity extends AppCompatActivity {
         int id = server.getId();
         ContentValues newValues = new ContentValues();
         newValues.put("name",server.getName());
+        if(server.getConnect()){
+            newValues.put("connect",1);
+        }else{
+            newValues.put("connect",0);
+        }
         SQLiteDatabase userDB = dbHelper.getWritableDatabase();
         userDB.update("servers", newValues, "id = ?",
                 new String[] {String.valueOf(id)});
+        userDB.close();
     }
 
     public static void print(String str){
@@ -143,9 +154,15 @@ public class MainActivity extends AppCompatActivity {
                 do {
                     MagMonServer server = new MagMonServer();
                     server.setId(cursor.getInt(cursor.getColumnIndex("id")));
-                    server.Name = (cursor.getString(cursor.getColumnIndex("name")));
-                    server.IP = (cursor.getString(cursor.getColumnIndex("ip")));
-                    server.Port = (cursor.getString(cursor.getColumnIndex("port")));
+                    server.setName(cursor.getString(cursor.getColumnIndex("name")));
+                    server.setIP(cursor.getString(cursor.getColumnIndex("ip")));
+                    server.setPort(cursor.getString(cursor.getColumnIndex("port")));
+                    if(cursor.getInt(cursor.getColumnIndex("connect"))==1)
+                    {
+                        server.setConnect(true);
+                    }else{
+                        server.setConnect(false);
+                    }
                     serverList.add(server);
                 }
                 while (cursor.moveToNext());
@@ -188,6 +205,65 @@ public class MainActivity extends AppCompatActivity {
             print(e.toString());
         }
         return MagMonList;
+    }
+
+    public static MagMonRec getMagMonByName(Context context, String widgetMagMon){
+        dbHelper = new DateBase(context);
+        SQLiteDatabase userDB = dbHelper.getWritableDatabase();
+        MagMonRec magmon = new MagMonRec();
+        try {
+            Cursor cursor = userDB.query("magmons", null, "name = ?", new String[]{widgetMagMon},
+                    null, null, null);
+            cursor.moveToFirst();
+            magmon.setId(cursor.getInt(cursor.getColumnIndex("id")));
+            magmon.setName(cursor.getString(cursor.getColumnIndex("name")));
+            magmon.setHePress(cursor.getString(cursor.getColumnIndex("HePress")));
+            magmon.setHeLevel(cursor.getString(cursor.getColumnIndex("HeLevel")));
+            magmon.setWaterFlow1(cursor.getString(cursor.getColumnIndex("WaterFlow1")));
+            magmon.setWaterTemp1(cursor.getString(cursor.getColumnIndex("WaterTemp1")));
+            magmon.setLastTime(cursor.getString(cursor.getColumnIndex("LastTime")));
+            magmon.setServerID(cursor.getInt(cursor.getColumnIndex("ServerID")));
+            if (cursor.getInt(cursor.getColumnIndex("MonitoringEnabled")) == 1) {
+                magmon.setMonitoringEnabled(true);
+            } else {
+                magmon.setMonitoringEnabled(false);
+            }
+            ArrayList<String> buflist2 = new ArrayList<String>();
+            String buf = cursor.getString(cursor.getColumnIndex("Errors"));
+            List<String> buflist = (List<String>) Arrays.asList(buf.split(","));
+            for(String bufstr:buflist){
+                buflist2.add(bufstr);
+            }
+            magmon.setErrors(buflist2);
+            cursor.close();
+        }catch (Exception e){
+            MainActivity.print("update widget error db: "+e.getMessage());
+        }
+        return magmon;
+    }
+
+    public static MagMonServer getServerById(Context context, int ServerID){
+        dbHelper = new DateBase(context);
+        SQLiteDatabase userDB = dbHelper.getWritableDatabase();
+        MagMonServer server = new MagMonServer();
+        try {
+            Cursor cursor = userDB.query("servers", null, "id = ?", new String[]{Integer.toString(ServerID)},
+                    null, null, null);
+            cursor.moveToFirst();
+            server.setName(cursor.getString(cursor.getColumnIndex("name")));
+            server.setIP(cursor.getString(cursor.getColumnIndex("ip")));
+            server.setPort(cursor.getString(cursor.getColumnIndex("port")));
+            if(cursor.getInt(cursor.getColumnIndex("connect"))==1)
+            {
+                server.setConnect(true);
+            }else{
+                server.setConnect(false);
+            }
+            cursor.close();
+        }catch (Exception e){
+            MainActivity.print("update widget error db: "+e.getMessage());
+        }
+        return server;
     }
 
 }
