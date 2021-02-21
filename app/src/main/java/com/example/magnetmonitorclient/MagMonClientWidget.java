@@ -74,7 +74,8 @@ public class MagMonClientWidget extends AppWidgetProvider {
             widgetView.setTextViewText(R.id.statusString,"Client is not");
             widgetView.setImageViewResource(R.id.mriImage, R.drawable.front_noconnect);
         }else {
-            if (magmon.getHePress().equals("----")) {
+            MainActivity.print("magmon.getErrors().get(0) = "+magmon.getErrors().get(0));
+            if (magmon.getErrors().get(0).equals("\"No Connect\"")){//magmon.getHePress().equals("----")) {
                 //magmon is not connect to seerver
                 widgetView = new RemoteViews(context.getPackageName(), R.layout.mag_mon_client_widget_noconnect);
                 widgetView.setImageViewResource(R.id.mriImage, R.drawable.front_gray);
@@ -88,10 +89,19 @@ public class MagMonClientWidget extends AppWidgetProvider {
             widgetView.setTextViewText(R.id.w_helevel, magmon.getHeLevel() + "%");
             widgetView.setTextViewText(R.id.w_wf, magmon.getWaterFlow1());
             widgetView.setTextViewText(R.id.w_wt, magmon.getWaterTemp1());
-            if (magmon.getErrors().size() == 1) {
-                widgetView.setImageViewResource(R.id.mriImage, R.drawable.front_yellow);
-            } else {
+            if (magmon.getErrors().get(0).equals("OK")) {
                 widgetView.setImageViewResource(R.id.mriImage, R.drawable.front);
+            } else {
+                if(magmon.getErrors().size() == 1){
+                    widgetView.setImageViewResource(R.id.mriImage, R.drawable.front_yellow);
+                }
+                else {
+                    if (magmon.getErrors().size() > 1) {
+                        widgetView.setImageViewResource(R.id.mriImage, R.drawable.front_red);
+                    } else {
+                        widgetView.setImageViewResource(R.id.mriImage, R.drawable.front);
+                    }
+                }
             }
 
             if (magmon.getMonitoringEnabled()) {

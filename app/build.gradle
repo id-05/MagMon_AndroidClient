@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.example.magnetmonitorclient"
         minSdkVersion 17
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 

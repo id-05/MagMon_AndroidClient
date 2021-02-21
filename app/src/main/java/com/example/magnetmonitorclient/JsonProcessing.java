@@ -42,12 +42,14 @@ public class JsonProcessing {
             if (bufObject.has("Errors")) {
                 ArrayList<String> listError = new ArrayList<>();
                 JsonArray bufArray = bufObject.getAsJsonArray("Errors");
-                for(final JsonElement bufElement:bufArray){
-                    listError.add(bufElement.toString());
-                }
+                if(bufArray.size()!=0){
+                    for(final JsonElement bufElement:bufArray){
+                        listError.add(bufElement.toString());
+                    }
+                }else{listError.add("OK");
+                    }
                 node.setErrors(listError);
             }
-
             if (bufObject.has("HeLevelCurrent")) node.setHeLevelCurrent(bufObject.get("HeLevelCurrent").getAsString());
             if (bufObject.has("HeLevelTopCurrent")) node.setHeLevelTopCurrent(bufObject.get("HeLevelTopCurrent").getAsString());
             if (bufObject.has("HeLevelTop")) node.setHeLevelTop(bufObject.get("HeLevelTop").getAsString());
@@ -98,10 +100,12 @@ public class JsonProcessing {
         newValues.put("WaterTemp1",magmon.getWaterTemp1());
         newValues.put("WaterFlow2",magmon.getWaterFlow2());
         newValues.put("WaterTemp2",magmon.getWaterTemp2());
+        //print(Integer.toString(magmon.getErrors().size()));
         String buf = magmon.getErrors().get(0);
-        for(int i=1; i>=magmon.getErrors().size();i++){
+        for(int i=0; i>=magmon.getErrors().size();i++){
             buf = buf + "," + magmon.getErrors().get(i);
         }
+        print("buf "+buf);
         newValues.put("Errors",buf);
         newValues.put("LastTime",magmon.getLastTime());
         newValues.put("MonitoringEnabled",1);
@@ -123,7 +127,6 @@ public class JsonProcessing {
         newValues.put("WaterTemp1",magmon.getWaterTemp1());
         newValues.put("WaterFlow2",magmon.getWaterFlow2());
         newValues.put("WaterTemp2",magmon.getWaterTemp2());
-
         String strbuf = magmon.getErrors().get(0);
         for(int i=1; i<magmon.getErrors().size(); i++){
             strbuf = strbuf + "," + magmon.getErrors().get(i);
