@@ -14,12 +14,32 @@ public class AddMagMonServer extends AppCompatActivity {
     Button addBut, cancelBut;
     MagMonServer newServer = new MagMonServer();
     EditText nameEdit,ipEdit,portEdit;
+    String method,serverid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_mag_mon_server);
-        setTitle("Add MagMon Server");
+//
+//        intent.putExtra("method","edit");
+//        intent.putExtra("serverid",magmons.get(i).getId());
+        Bundle arguments = getIntent().getExtras();
+
+        if(arguments!=null) {
+            method = arguments.getString("method");
+        }
+
+        if(method.equals("new")){
+            setTitle("Add MagMon Server");
+        }
+
+        if(method.equals("edit")){
+            serverid = arguments.getString("serverid");
+            setTitle("Edit MagMon Server");
+        }
+
+
+
 
         nameEdit = findViewById(R.id.name);
         ipEdit = findViewById(R.id.ip);

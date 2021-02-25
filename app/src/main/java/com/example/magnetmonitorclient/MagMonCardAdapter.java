@@ -98,7 +98,7 @@ public class MagMonCardAdapter extends RecyclerView.Adapter<MagMonCardAdapter.Ma
                             case R.id.itemSetting:
                             {
                                 Intent intent = new Intent(context,AddMagMonServer.class);
-                                intent.putExtra("method","new");
+                                intent.putExtra("method","edit");
                                 intent.putExtra("serverid",magmons.get(i).getId());
                                 context.startActivity(intent);
 
